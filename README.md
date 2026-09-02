@@ -1,103 +1,57 @@
-# 🥁 Mni Drums
+# MniDrums
 
-A small Angular website for drummers — a metronome, and organized libraries for
-sheet music, songs, lessons, and books. Warm wood/brass "drum shell" visual theme,
-built with plain Angular + CSS (no UI/animation libraries).
+A small Angular site for a drummer's practice resources, with a drum-kit themed layout.
 
-## Features
+## Pages
 
-- **Header nav** — sticky, drum-hoop styled menu: Metronome, Sheets, Musics, Lessons, Books.
-- **Metronome** — BPM slider (30–260), ±1 / ±5 nudge buttons, tap tempo, selectable
-  time signature (2/4–7/4), visual beat indicator, and a click sound generated with
-  the native Web Audio API (no audio files or libraries required).
-- **Sheets** — placeholder page, ready for future content.
-- **Musics** — card grid of songs, each with a PDF link and an external link
-  (e.g. a reference recording or video).
-- **Lessons** / **Books** — card grid with a PNG thumbnail + matching PDF per item.
-  Falls back to a generic document icon automatically if an image is missing, so
-  you can add real files gradually without breaking the layout.
-
-## Requirements
-
-- [Node.js](https://nodejs.org/) v18.19+, v20.11+, or v22+
-- npm (comes with Node)
-
-## Getting started
-
-```bash
-# install dependencies
-npm install
-
-# run the dev server
-npm start
-```
-
-Then open **http://localhost:4200**.
-
-## Building for production
-
-```bash
-npm run build
-```
-
-Output goes to `dist/drum-site/browser` — deploy that folder to any static host
-(GitHub Pages, Netlify, Vercel, S3, nginx, etc.).
-
-## Adding your own content
-
-Content lives as plain arrays inside each page's component — no CMS or backend needed.
-
-| Page    | File                                              | Assets folder        |
-|---------|---------------------------------------------------|-----------------------|
-| Musics  | `src/app/pages/musics/musics.component.ts`         | `src/assets/musics/`  |
-| Lessons | `src/app/pages/lessons/lessons.component.ts`       | `src/assets/lessons/` |
-| Books   | `src/app/pages/books/books.component.ts`           | `src/assets/books/`   |
-
-1. Drop your PDF (and PNG thumbnail, for Lessons/Books) into the matching `src/assets/...` folder.
-2. Open the page's `.component.ts` file and add/edit an entry in the `items` array, e.g.:
-
-   ```ts
-   {
-     title: 'My Song',
-     description: 'Optional short description.',
-     pdfPath: 'assets/musics/my-song.pdf',
-     linkUrl: 'https://example.com/video',
-     linkLabel: 'Watch performance',
-   }
-   ```
-
-3. Save — the dev server hot-reloads automatically.
-
-The shared item shape (`LibraryItem`) lives in `src/app/models/library-item.ts`
-and is used by `Musics`, `Lessons`, and `Books` via the reusable
-`app-file-list` component (`src/app/components/file-list/`).
+- **Metronome** — empty placeholder page, ready for you to build out.
+- **Sheets** — empty placeholder page.
+- **Musics** — a list of songs, each with a PDF (sheet/transcription) and an external link (e.g. a YouTube reference).
+- **Lessons** — a list of lessons, each with a PDF handout and a PNG diagram/thumbnail.
+- **Books** — a list of reference books, each with a PDF and a PNG cover thumbnail.
 
 ## Project structure
 
 ```
 src/app/
-├── components/
-│   ├── header/         # top nav bar
-│   └── file-list/       # reusable card grid for Musics/Lessons/Books
-├── models/
-│   └── library-item.ts  # shared data shape for list items
-├── pages/
-│   ├── metronome/        # metronome tool
-│   ├── sheets/           # empty placeholder page
-│   ├── musics/
-│   ├── lessons/
-│   └── books/
-├── app.routes.ts
-├── app.component.*
-└── app.config.ts
+  components/
+    header/        header + nav menu (Metronome, Sheets, Musics, Lessons, Books)
+    file-list/      reusable grid used by Musics, Lessons, Books
+  models/
+    library-item.ts  shared shape for list items (title, description, image, pdf, link)
+  pages/
+    metronome/       empty page
+    sheets/          empty page
+    musics/          list of songs (pdf + link)
+    lessons/         list of lessons (pdf + png)
+    books/           list of books (pdf + png)
+src/assets/
+  musics/    placeholder PDFs — replace with your real files
+  lessons/   placeholder PDFs + PNGs — replace with your real files
+  books/     placeholder PDFs + PNGs — replace with your real files
 ```
 
-## Tech
+## Adding your own files
 
-- Angular 18 (standalone components, no NgModules)
-- Plain CSS with custom properties for theming — no Bootstrap/Tailwind/Material
-- Native Web Audio API for the metronome click — no audio library
+1. Drop your real PDF/PNG files into the matching folder under `src/assets/`.
+2. Open the page's component (e.g. `src/app/pages/musics/musics.component.ts`) and edit the `items` array — set `title`, `description`, `imagePath`, `pdfPath`, and (for Musics) `linkUrl` / `linkLabel` to match your files.
+3. If an image path is missing or wrong, the card automatically falls back to a simple document icon, so nothing breaks visually while you're filling things in.
 
-## License
+## Development
 
-Use freely for your own drum practice site.
+```bash
+npm install
+npm start        # ng serve, then open http://localhost:4200
+```
+
+## Production build
+
+```bash
+npm run build     # outputs to dist/mnidrums-site/browser
+```
+
+## Notes
+
+- Only Angular's own packages are used (router, forms) — no extra UI/PDF libraries. PDFs open in a new browser tab via a plain `<a href>` link, which every browser can already view natively.
+- Styling is plain CSS with a warm wood/brass drum-shell palette, defined as CSS variables in `src/styles.css`.
+- The header nav collapses into a simple toggle menu on narrow screens.
