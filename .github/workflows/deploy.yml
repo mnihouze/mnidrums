@@ -1,0 +1,36 @@
+name: Deploy 
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependências e fazer o Build
+        run: |
+          npm ci
+          npm run build --configuration=production
+
+      - name: Enviar arquivos via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # Caminho da pasta gerada pelo Angular (ajuste o nome do projeto se necessário)
+          local-dir: dist/mnidrums-site/
+          # Caminho de destino no servidor FTP (geralmente public_html ou www)
+          server-dir: ./mnidrums-ftp/ 
