@@ -31,4 +31,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: dist/mnidrums-site/browser/
-          server-dir: ./mnidrums.mnihouze.com/
+          server-dir: /mnidrums.mnihouze.com/
