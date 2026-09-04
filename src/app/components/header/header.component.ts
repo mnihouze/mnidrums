@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { SITE_NAME } from '../../site-config';
 
 @Component({
   selector: 'app-header',
@@ -10,6 +11,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  siteName = SITE_NAME;
   menuOpen = false;
 
   navItems = [
@@ -18,5 +20,6 @@ export class HeaderComponent {
     { label: 'Musics', path: '/musics' },
     { label: 'Lessons', path: '/lessons' },
     { label: 'Books', path: '/books' },
+    { label: 'Terms and Conditions', path:'/terms-and-conditions'}
   ];
 }

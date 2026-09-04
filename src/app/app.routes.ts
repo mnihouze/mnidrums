@@ -4,6 +4,7 @@ import { SheetsComponent } from './pages/sheets/sheets.component';
 import { MusicsComponent } from './pages/musics/musics.component';
 import { LessonsComponent } from './pages/lessons/lessons.component';
 import { BooksComponent } from './pages/books/books.component';
+import { TermsAndConditionsComponent } from './pages/terms-and-conditions/terms-and-conditions.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'metronome', pathMatch: 'full' },
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'musics', component: MusicsComponent, title: 'Musics · MniDrums' },
   { path: 'lessons', component: LessonsComponent, title: 'Lessons · MniDrums' },
   { path: 'books', component: BooksComponent, title: 'Books · MniDrums' },
+  { path: 'terms-and-conditions', component: TermsAndConditionsComponent, title: 'Terms And Conditions · MniDrums'},
   { path: '**', redirectTo: 'metronome' },
 ];

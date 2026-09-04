@@ -26,3 +26,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Ignore folders inside assets, keep files at the assets root
+/src/assets/*/
