@@ -1,0 +1,80 @@
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.25rem;
+}
+
+.file-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.file-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-deep);
+}
+
+.thumb {
+  height: 140px;
+  background: var(--tan-light);
+  border-bottom: 3px solid var(--brass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-fallback svg {
+  width: 56px;
+  height: 56px;
+}
+
+.file-body {
+  padding: 1rem 1.1rem 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-body h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.3rem;
+}
+
+.file-body p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  flex: 1;
+  margin: 0 0 0.9rem;
+}
+
+.file-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.link-btn {
+  align-self: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--wood);
+  text-decoration: none;
+  padding: 0.4em 0.2em;
+}
+.link-btn:hover { text-decoration: underline; }
+
+.empty-msg {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 3rem 1rem;
+  font-style: italic;
+}

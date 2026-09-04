@@ -1,0 +1,112 @@
+<section class="page-wrap metronome-page">
+  <h1 class="page-title">Metronome</h1>
+  <p class="page-subtitle">Set your tempo, shape the feel, and let it click for as long as you need.</p>
+
+  <mat-card class="metronome-card">
+    <mat-card-content>
+
+      <!-- Beat indicator -->
+      <div class="beat-indicator">
+        <span
+          *ngFor="let b of beatDots; let i = index"
+          class="beat-dot"
+          [class.active]="isPlaying && currentSub === 0 && currentBeat === i"
+          [class.accent]="i === 0 && stressFirstBeat"
+        ></span>
+      </div>
+      <div class="pulse-ring" [class.pulse]="pulse"></div>
+
+      <!-- BPM -->
+      <div class="bpm-value">
+        <span class="bpm-number">{{ bpm }}</span>
+        <span class="bpm-unit">BPM</span>
+      </div>
+
+      <div class="bpm-row">
+        <button mat-icon-button color="primary" class="nudge-btn" (click)="nudgeBpm(-1)" aria-label="Decrease BPM">
+          <mat-icon>remove</mat-icon>
+        </button>
+
+        <mat-slider class="bpm-slider" [min]="minBpm" [max]="maxBpm" step="1" discrete>
+          <input matSliderThumb [(ngModel)]="bpm" (ngModelChange)="onBpmChange($event)" />
+        </mat-slider>
+
+        <button mat-icon-button color="primary" class="nudge-btn" (click)="nudgeBpm(1)" aria-label="Increase BPM">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+
+      <div class="tap-row">
+        <button mat-stroked-button color="primary" (click)="tapTempo()">
+          <mat-icon>touch_app</mat-icon>
+          Tap Tempo
+        </button>
+      </div>
+
+      <div class="options-grid">
+
+        <!-- Beats per bar -->
+        <div class="bars-field bars-stepper">
+          <span class="option-label">Beats per bar</span>
+          <div class="stepper-row">
+            <button mat-icon-button color="primary" class="nudge-btn" (click)="nudgeBeatsPerBar(-1)" aria-label="Decrease beats per bar">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span class="stepper-value">{{ beatsPerBar }}</span>
+            <button mat-icon-button color="primary" class="nudge-btn" (click)="nudgeBeatsPerBar(1)" aria-label="Increase beats per bar">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Subdivision -->
+        <div class="option-block subdivision-field">
+          <span class="option-label">Subdivision</span>
+          <div class="subdivision-row">
+            <button
+              type="button"
+              *ngFor="let s of subdivisionOptions"
+              class="subdivision-btn"
+              [class.selected]="subdivision === s.value"
+              (click)="subdivision = s.value"
+              [attr.aria-pressed]="subdivision === s.value"
+              [attr.aria-label]="s.label"
+              [matTooltip]="s.label"
+            >
+              {{ s.symbol }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="options-grid">
+
+        <!-- Stress first beat -->
+        <div class="option-block">
+          <mat-slide-toggle color="primary" [(ngModel)]="stressFirstBeat">Stress first beat</mat-slide-toggle>
+        </div>
+
+        <!-- Timer -->
+        <mat-form-field appearance="outline" class="timer-field">
+          <mat-label>Play for (minutes)</mat-label>
+          <input matInput type="number" min="0" step="1" [(ngModel)]="durationMinutes" [disabled]="isPlaying" />
+          <mat-hint>0 = play indefinitely</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!-- Timer progress -->
+      <div class="timer-status" *ngIf="isPlaying && durationMinutes > 0">
+        <mat-progress-bar mode="determinate" [value]="timerProgress"></mat-progress-bar>
+        <span class="timer-label">{{ remainingTimeLabel }}</span>
+      </div>
+
+      <div class="action-row">
+        <button mat-raised-button color="primary" class="play-btn" (click)="toggle()">
+          <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
+          {{ isPlaying ? 'Stop' : 'Start' }}
+        </button>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</section>
