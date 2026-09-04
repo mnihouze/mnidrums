@@ -31,6 +31,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           # Caminho da pasta gerada pelo Angular (ajuste o nome do projeto se necessário)
-          local-dir: dist/mnidrums-site/
+          local-dir: dist/mnidrums-site/browser
           # Caminho de destino no servidor FTP (geralmente public_html ou www)
-          server-dir: ./mnidrums-ftp/ 
+          server-dir: /mnidrums.mnihouze.com
