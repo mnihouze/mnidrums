@@ -33,4 +33,4 @@ jobs:
           # Caminho da pasta gerada pelo Angular (ajuste o nome do projeto se necessário)
           local-dir: dist/mnidrums-site/
           # Caminho de destino no servidor FTP (geralmente public_html ou www)
-          server-dir: ./public_html/
+          server-dir: ./
