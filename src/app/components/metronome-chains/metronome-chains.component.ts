@@ -24,20 +24,19 @@ export interface ChainDraft {
 
 /** Lists the saved chains and lets the user create, edit, reorder, delete and play them. */
 @Component({
-  selector: 'app-metronome-chains',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-    MatTooltipModule,
-  ],
-  templateUrl: './metronome-chains.component.html',
-  styleUrl: './metronome-chains.component.scss',
+    selector: 'app-metronome-chains',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MatTooltipModule,
+    ],
+    templateUrl: './metronome-chains.component.html',
+    styleUrl: './metronome-chains.component.scss'
 })
 export class MetronomeChainsComponent {
   /** Chain currently playing, highlighted in the list. */

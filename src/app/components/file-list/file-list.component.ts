@@ -4,11 +4,10 @@ import { LibraryItem } from '../../models/library-item';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 
 @Component({
-  selector: 'app-file-list',
-  standalone: true,
-  imports: [CommonModule, SafeUrlPipe],
-  templateUrl: './file-list.component.html',
-  styleUrl: './file-list.component.scss'
+    selector: 'app-file-list',
+    imports: [CommonModule, SafeUrlPipe],
+    templateUrl: './file-list.component.html',
+    styleUrl: './file-list.component.scss'
 })
 export class FileListComponent {
   @Input() items: LibraryItem[] = [];

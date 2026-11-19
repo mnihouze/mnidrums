@@ -21,22 +21,21 @@ interface SubdivisionOption {
 }
 
 @Component({
-  selector: 'app-metronome',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatCardModule,
-    MatSliderModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatProgressBarModule,
-    MatTooltipModule
-  ],
-  templateUrl: './metronome.component.html',
-  styleUrl: './metronome.component.scss',
+    selector: 'app-metronome',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatCardModule,
+        MatSliderModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatProgressBarModule,
+        MatTooltipModule
+    ],
+    templateUrl: './metronome.component.html',
+    styleUrl: './metronome.component.scss'
 })
 export class MetronomeComponent implements OnDestroy {
   /**

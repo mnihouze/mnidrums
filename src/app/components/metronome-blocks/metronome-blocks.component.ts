@@ -40,20 +40,19 @@ export function describeSettings(settings: MetronomeSettings): string {
  * Metronome Plus pages, which see the same list.
  */
 @Component({
-  selector: 'app-metronome-blocks',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DragDropModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatTooltipModule,
-  ],
-  templateUrl: './metronome-blocks.component.html',
-  styleUrl: './metronome-blocks.component.scss',
+    selector: 'app-metronome-blocks',
+    imports: [
+        CommonModule,
+        FormsModule,
+        DragDropModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatTooltipModule,
+    ],
+    templateUrl: './metronome-blocks.component.html',
+    styleUrl: './metronome-blocks.component.scss'
 })
 export class MetronomeBlocksComponent {
   /** The metronome whose settings are saved and loaded. */

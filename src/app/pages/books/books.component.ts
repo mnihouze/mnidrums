@@ -3,11 +3,10 @@ import { FileListComponent } from '../../components/file-list/file-list.componen
 import { LibraryItem } from '../../models/library-item';
 
 @Component({
-  selector: 'app-books',
-  standalone: true,
-  imports: [FileListComponent],
-  templateUrl: './books.component.html',
-  styleUrl: './books.component.scss'
+    selector: 'app-books',
+    imports: [FileListComponent],
+    templateUrl: './books.component.html',
+    styleUrl: './books.component.scss'
 })
 export class BooksComponent {
   // Placeholder data — drop matching files into src/assets/books/ and update the paths.

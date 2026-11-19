@@ -26,23 +26,22 @@ export const ALL_BLOCKS = 'all';
  * one starts automatically.
  */
 @Component({
-  selector: 'app-metronome-plus',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatSelectModule,
-    MatSlideToggleModule,
-    MatTooltipModule,
-    MetronomeComponent,
-    MetronomeBlocksComponent,
-    MetronomeChainsComponent,
-  ],
-  templateUrl: './metronome-plus.component.html',
-  styleUrl: './metronome-plus.component.scss',
+    selector: 'app-metronome-plus',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatSelectModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        MetronomeComponent,
+        MetronomeBlocksComponent,
+        MetronomeChainsComponent,
+    ],
+    templateUrl: './metronome-plus.component.html',
+    styleUrl: './metronome-plus.component.scss'
 })
 export class MetronomePlusComponent {
   @ViewChild(MetronomeComponent, { static: true }) metronome!: MetronomeComponent;
