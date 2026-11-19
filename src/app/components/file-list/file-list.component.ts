@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { LibraryItem } from '../../models/library-item';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 
 @Component({
     selector: 'app-file-list',
-    imports: [CommonModule, SafeUrlPipe],
+    imports: [SafeUrlPipe],
     templateUrl: './file-list.component.html',
     styleUrl: './file-list.component.scss'
 })

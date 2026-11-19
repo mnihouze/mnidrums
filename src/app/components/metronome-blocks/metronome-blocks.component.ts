@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, NgForm } from '@angular/forms';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -42,15 +42,14 @@ export function describeSettings(settings: MetronomeSettings): string {
 @Component({
     selector: 'app-metronome-blocks',
     imports: [
-        CommonModule,
-        FormsModule,
-        DragDropModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatTooltipModule,
-    ],
+    FormsModule,
+    DragDropModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatTooltipModule
+],
     templateUrl: './metronome-blocks.component.html',
     styleUrl: './metronome-blocks.component.scss'
 })

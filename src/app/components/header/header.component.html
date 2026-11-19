@@ -22,13 +22,15 @@
     </button>
 
     <nav class="main-nav" [class.open]="menuOpen">
-      <a *ngFor="let item of navItems"
-         [routerLink]="item.path"
-         routerLinkActive="active"
-         (click)="menuOpen = false"
-         class="nav-link">
-        {{ item.label }}
-      </a>
+      @for (item of navItems; track item) {
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          (click)="menuOpen = false"
+          class="nav-link">
+          {{ item.label }}
+        </a>
+      }
     </nav>
   </div>
 </header>

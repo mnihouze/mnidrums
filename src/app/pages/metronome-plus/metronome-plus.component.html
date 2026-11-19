@@ -9,14 +9,18 @@
   <section class="chain card" aria-labelledby="chain-title">
     <div class="chain-header">
       <h2 id="chain-title">Player</h2>
-      <span class="chain-total" *ngIf="sequence.length">{{ sequenceSummary }}</span>
+      @if (sequence.length) {
+        <span class="chain-total">{{ sequenceSummary }}</span>
+      }
     </div>
 
     <mat-form-field appearance="outline" class="source-field" subscriptSizing="dynamic">
       <mat-label>Play</mat-label>
       <mat-select [(ngModel)]="source" [disabled]="chainRunning" aria-label="What to play">
         <mat-option [value]="ALL_BLOCKS">All blocks (list order)</mat-option>
-        <mat-option *ngFor="let chain of chains" [value]="chain.id">{{ chain.name }}</mat-option>
+        @for (chain of chains; track chain) {
+          <mat-option [value]="chain.id">{{ chain.name }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
 
@@ -30,7 +34,7 @@
         class="chain-btn"
         (click)="toggleChain()"
         [disabled]="!sequence.length && !chainRunning"
-      >
+        >
         <mat-icon>{{ chainRunning ? 'stop' : 'playlist_play' }}</mat-icon>
         {{ chainRunning ? 'Stop chain' : 'Start chain' }}
       </button>
@@ -41,7 +45,7 @@
     </div>
 
     <div class="chain-status" aria-live="polite">
-      <ng-container *ngIf="chainRunning && currentBlock as block; else idle">
+      @if (chainRunning && currentBlock; as block) {
         <p class="now-playing">
           <span class="label">Now playing</span>
           <strong>{{ currentPosition + 1 }}/{{ sequence.length }} · {{ block.name }}</strong>
@@ -50,21 +54,28 @@
           <span class="label">Chain</span>
           {{ sourceName }}
         </p>
-        <p class="untimed-hint" *ngIf="block.settings.bars <= 0">
-          This block has no bar count — press <mat-icon inline>skip_next</mat-icon> to move on.
-        </p>
+        @if (block.settings.bars <= 0) {
+          <p class="untimed-hint">
+            This block has no bar count — press <mat-icon inline>skip_next</mat-icon> to move on.
+          </p>
+        }
         <p class="up-next">
           <span class="label">Up next</span>
           {{ nextBlock ? nextBlock.name : 'End of chain' }}
         </p>
-      </ng-container>
-      <ng-template #idle>
-        <p class="finished" *ngIf="chainFinished">Chain finished. Nice work! 🥁</p>
-        <p class="hint" *ngIf="!blocks.length">Save at least one block below to build a chain.</p>
-        <p class="hint" *ngIf="sequence.length && hasUntimedBlocks">
-          Blocks without a bar count (∞) play until you press <mat-icon inline>skip_next</mat-icon>. Set “Play for (bars)” before saving a block to make it advance on its own.
-        </p>
-      </ng-template>
+      } @else {
+        @if (chainFinished) {
+          <p class="finished">Chain finished. Nice work! 🥁</p>
+        }
+        @if (!blocks.length) {
+          <p class="hint">Save at least one block below to build a chain.</p>
+        }
+        @if (sequence.length && hasUntimedBlocks) {
+          <p class="hint">
+            Blocks without a bar count (∞) play until you press <mat-icon inline>skip_next</mat-icon>. Set “Play for (bars)” before saving a block to make it advance on its own.
+          </p>
+        }
+      }
     </div>
   </section>
 

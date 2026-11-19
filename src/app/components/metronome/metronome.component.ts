@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MetronomeSettings } from '../../models/metronome-settings';
 
@@ -23,17 +23,16 @@ interface SubdivisionOption {
 @Component({
     selector: 'app-metronome',
     imports: [
-        CommonModule,
-        FormsModule,
-        MatCardModule,
-        MatSliderModule,
-        MatButtonModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatProgressBarModule,
-        MatTooltipModule
-    ],
+    FormsModule,
+    MatCardModule,
+    MatSliderModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressBarModule,
+    MatTooltipModule
+],
     templateUrl: './metronome.component.html',
     styleUrl: './metronome.component.scss'
 })

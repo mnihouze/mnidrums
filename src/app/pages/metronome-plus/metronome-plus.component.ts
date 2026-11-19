@@ -1,5 +1,5 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -28,18 +28,17 @@ export const ALL_BLOCKS = 'all';
 @Component({
     selector: 'app-metronome-plus',
     imports: [
-        CommonModule,
-        FormsModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatSelectModule,
-        MatSlideToggleModule,
-        MatTooltipModule,
-        MetronomeComponent,
-        MetronomeBlocksComponent,
-        MetronomeChainsComponent,
-    ],
+    FormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatTooltipModule,
+    MetronomeComponent,
+    MetronomeBlocksComponent,
+    MetronomeChainsComponent
+],
     templateUrl: './metronome-plus.component.html',
     styleUrl: './metronome-plus.component.scss'
 })
