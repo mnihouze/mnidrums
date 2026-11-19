@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 
@@ -35,6 +35,7 @@ export interface ChainDraft {
     MatTooltipModule
 ],
     templateUrl: './metronome-chains.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './metronome-chains.component.scss'
 })
 export class MetronomeChainsComponent {

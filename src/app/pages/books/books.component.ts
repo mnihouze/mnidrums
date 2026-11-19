@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FileListComponent } from '../../components/file-list/file-list.component';
 import { LibraryItem } from '../../models/library-item';
 
@@ -6,6 +6,7 @@ import { LibraryItem } from '../../models/library-item';
     selector: 'app-books',
     imports: [FileListComponent],
     templateUrl: './books.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './books.component.scss'
 })
 export class BooksComponent {

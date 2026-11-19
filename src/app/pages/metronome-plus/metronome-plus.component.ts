@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 
@@ -40,6 +40,7 @@ export const ALL_BLOCKS = 'all';
     MetronomeChainsComponent
 ],
     templateUrl: './metronome-plus.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './metronome-plus.component.scss'
 })
 export class MetronomePlusComponent {

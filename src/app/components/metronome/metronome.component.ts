@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { MetronomeSettings } from '../../models/metronome-settings';
@@ -34,6 +34,7 @@ interface SubdivisionOption {
     MatTooltipModule
 ],
     templateUrl: './metronome.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './metronome.component.scss'
 })
 export class MetronomeComponent implements OnDestroy {

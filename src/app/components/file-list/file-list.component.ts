@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { LibraryItem } from '../../models/library-item';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
@@ -7,6 +7,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
     selector: 'app-file-list',
     imports: [SafeUrlPipe],
     templateUrl: './file-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './file-list.component.scss'
 })
 export class FileListComponent {
