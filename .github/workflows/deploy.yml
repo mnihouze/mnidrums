@@ -1,15 +1,15 @@
-name: Deploy 
+name: Deploy
 
 on:
+  # Testes rodam em qualquer branch e em PRs; o deploy só acontece na main.
   push:
-    branches:
-      - main
-  # Permite rodar o deploy manualmente pela aba Actions ("Run workflow").
+  pull_request:
+  # Permite rodar manualmente pela aba Actions ("Run workflow").
   workflow_dispatch:
 
 jobs:
-  web-deploy:
-    name: Build and Deploy
+  test:
+    name: Testes
     runs-on: ubuntu-latest
 
     steps:
@@ -19,14 +19,34 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+          cache: npm
 
       - name: Instalar dependências
         run: npm ci
 
-      # Não publica se algum teste falhar.
       - name: Rodar os testes
         run: npm test
+
+  web-deploy:
+    name: Build and Deploy
+    needs: test
+    # Só publica a partir da main (push ou execução manual), nunca em PRs.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
 
       # O "--" repassa a flag para o "ng build" (sem ele o npm a engole).
       # public/.htaccess (rotas do app + cache) vai junto para o browser/.
