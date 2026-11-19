@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MetronomeBlocksComponent, describeAccents, describeSettings } from './metronome-blocks.component';
@@ -6,7 +6,8 @@ import { MetronomeComponent } from '../metronome/metronome.component';
 import { MetronomeBlocksService } from '../../services/metronome-blocks.service';
 
 @Component({
-  standalone: true,
+  // The tests set host fields directly, so it must not be OnPush (the v22 default).
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MetronomeComponent, MetronomeBlocksComponent],
   template: `
     <app-metronome #m></app-metronome>

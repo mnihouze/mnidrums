@@ -19,8 +19,19 @@ built with plain Angular + CSS (no UI/animation libraries).
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/) v18.19+, v20.11+, or v22+
-- npm (comes with Node)
+- [Node.js](https://nodejs.org/) 24 LTS (the exact version is in `.nvmrc`;
+  Angular 22 also accepts 22.22.3+ or 26+). With nvm: `nvm install` / `nvm use`
+  (on nvm-windows: `nvm install 24.22.3` and `nvm use 24.22.3`).
+- npm 11 (comes with Node 24). Packages that run install scripts must be listed
+  under `allowScripts` in `package.json`; approve new ones with
+  `npm install-scripts approve <pkg>`.
+
+## Tests
+
+```bash
+npm test             # unit tests once (Angular CLI + Vitest)
+npm run test:watch   # re-run on save
+```
 
 ## Getting started
 

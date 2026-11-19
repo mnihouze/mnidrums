@@ -6,10 +6,14 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "ng test --watch=false",
+    "test:watch": "ng test --watch"
   },
   "private": true,
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0",
+    "npm": ">=10"
+  },
   "dependencies": {
     "@angular/animations": "^22.3.0",
     "@angular/common": "^22.3.0",
@@ -25,13 +29,17 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "~1.10.0",
-    "@analogjs/vitest-angular": "^1.22.5",
-    "@angular-devkit/build-angular": "^22.3.0",
+    "@angular/build": "^22.3.0",
     "@angular/cli": "^22.3.0",
     "@angular/compiler-cli": "^22.3.0",
-    "jsdom": "^25.0.1",
+    "jsdom": "^31.0.1",
     "typescript": "~6.0.3",
-    "vitest": "^2.1.9"
+    "vitest": "^5.1.1"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "@parcel/watcher": false,
+    "lmdb": false,
+    "msgpackr-extract": false
   }
 }
