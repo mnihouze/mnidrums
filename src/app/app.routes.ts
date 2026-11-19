@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { MetronomeComponent } from './pages/metronome/metronome.component';
+import { MetronomePageComponent } from './pages/metronome/metronome-page.component';
+import { MetronomePlusComponent } from './pages/metronome-plus/metronome-plus.component';
 import { SheetsComponent } from './pages/sheets/sheets.component';
 import { MusicsComponent } from './pages/musics/musics.component';
 import { LessonsComponent } from './pages/lessons/lessons.component';
@@ -8,7 +9,8 @@ import { TermsAndConditionsComponent } from './pages/terms-and-conditions/terms-
 
 export const routes: Routes = [
   { path: '', redirectTo: 'metronome', pathMatch: 'full' },
-  { path: 'metronome', component: MetronomeComponent, title: 'Metronome · MniDrums' },
+  { path: 'metronome', component: MetronomePageComponent, title: 'Metronome · MniDrums' },
+  { path: 'metronome-plus', component: MetronomePlusComponent, title: 'Metronome Plus · MniDrums' },
   { path: 'sheets', component: SheetsComponent, title: 'Sheets · MniDrums' },
   { path: 'musics', component: MusicsComponent, title: 'Musics · MniDrums' },
   { path: 'lessons', component: LessonsComponent, title: 'Lessons · MniDrums' },

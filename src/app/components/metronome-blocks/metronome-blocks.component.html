@@ -1,0 +1,85 @@
+<section class="blocks card" aria-labelledby="blocks-title">
+  <h2 id="blocks-title">Blocks</h2>
+
+  <form class="save-row" #saveForm="ngForm" (ngSubmit)="saveCurrent(saveForm)">
+    <mat-form-field appearance="outline" class="name-field" subscriptSizing="dynamic">
+      <mat-label>Block name</mat-label>
+      <input matInput name="newBlockName" [(ngModel)]="newBlockName" maxlength="60" placeholder="e.g. Warm-up" />
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" class="save-btn">
+      <mat-icon>bookmark_add</mat-icon>
+      Save current settings
+    </button>
+  </form>
+
+  <p class="empty-msg" *ngIf="!blocks.length">
+    No blocks yet. Set up the metronome above and save it as a block.
+  </p>
+
+  <ol class="block-list" *ngIf="blocks.length" cdkDropList (cdkDropListDropped)="onDrop($event)">
+    <li
+      *ngFor="let block of blocks; let i = index; let first = first; let last = last; trackBy: trackById"
+      class="block-item"
+      [class.active]="block.id === activeBlockId"
+      [class.playing]="block.id === playingBlockId"
+      cdkDrag
+      cdkDragLockAxis="y"
+    >
+      <span class="drag-handle" cdkDragHandle matTooltip="Drag to reorder" aria-hidden="true">
+        <mat-icon>drag_indicator</mat-icon>
+      </span>
+      <span class="block-index">{{ i + 1 }}</span>
+
+      <div class="block-main">
+        <ng-container *ngIf="editingBlockId !== block.id; else renameTpl">
+          <span class="block-name">
+            <mat-icon class="playing-icon" *ngIf="block.id === playingBlockId" aria-label="Now playing">graphic_eq</mat-icon>
+            {{ block.name }}
+          </span>
+        </ng-container>
+        <ng-template #renameTpl>
+          <input
+            #renameInput
+            class="rename-input"
+            [(ngModel)]="editingName"
+            maxlength="60"
+            aria-label="Block name"
+            (keydown.enter)="commitRename()"
+            (keydown.escape)="cancelRename()"
+            (blur)="commitRename()"
+          />
+        </ng-template>
+        <span class="block-summary">{{ summary(block.settings) }}</span>
+      </div>
+
+      <div class="block-actions">
+        <button
+          mat-stroked-button
+          color="primary"
+          class="load-btn"
+          (click)="loadBlock(block)"
+          [disabled]="loadDisabled"
+          matTooltip="Load these settings into the metronome"
+        >
+          <mat-icon>settings_backup_restore</mat-icon>
+          Load
+        </button>
+        <button mat-icon-button (click)="overwriteBlock(block)" matTooltip="Replace with current settings" aria-label="Replace with current settings">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="startRename(block)" matTooltip="Rename" aria-label="Rename">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="moveBlock(i, -1)" [disabled]="first" matTooltip="Move up" aria-label="Move up">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="moveBlock(i, 1)" [disabled]="last" matTooltip="Move down" aria-label="Move down">
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteBlock(block)" matTooltip="Delete" aria-label="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </li>
+  </ol>
+</section>
