@@ -1,0 +1,71 @@
+.chain {
+  max-width: 620px;
+  margin: 1.5rem auto 0;
+  padding: 1.25rem;
+  border: 2px solid var(--brass);
+}
+
+.chain-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.chain-total {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.source-field {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.chain-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.chain-btn {
+  min-width: 170px;
+}
+
+.repeat-toggle {
+  margin-left: 0.75rem;
+}
+
+.chain-status p {
+  margin: 0.25rem 0;
+  text-align: center;
+}
+
+.label {
+  display: inline-block;
+  min-width: 6.5rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.now-playing strong {
+  color: var(--wood-dark);
+  font-size: 1.1rem;
+}
+
+.untimed-hint,
+.hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.finished {
+  color: var(--brass-dark);
+  font-weight: 600;
+}

@@ -1,0 +1,109 @@
+<section class="chains card" aria-labelledby="chains-title">
+  <div class="chains-header">
+    <h2 id="chains-title">Saved chains</h2>
+    <button mat-stroked-button color="primary" class="new-chain-btn" (click)="newChain()" [disabled]="!!draft || !blocks.length">
+      <mat-icon>playlist_add</mat-icon>
+      New chain
+    </button>
+  </div>
+
+  <p class="empty-msg" *ngIf="!chains.length && !draft">
+    {{ blocks.length ? 'No saved chains yet. Press “New chain” to pick blocks in the order you want.' : 'Save some blocks first, then combine them into chains.' }}
+  </p>
+
+  <!-- Editor -->
+  <div class="chain-editor" *ngIf="draft as d">
+    <h3>{{ d.chainId ? 'Edit chain' : 'New chain' }}</h3>
+
+    <mat-form-field appearance="outline" class="full" subscriptSizing="dynamic">
+      <mat-label>Chain name</mat-label>
+      <input matInput name="chainName" [(ngModel)]="d.name" maxlength="60" placeholder="e.g. Daily routine" />
+    </mat-form-field>
+
+    <ol class="step-list" *ngIf="draftSteps.length; else noSteps">
+      <li class="step-item" *ngFor="let step of draftSteps; let i = index; let first = first; let last = last">
+        <span class="step-index">{{ i + 1 }}</span>
+        <div class="step-main">
+          <span class="step-name">{{ step.name }}</span>
+          <span class="step-summary">{{ describeBlock(step.settings) }}</span>
+        </div>
+        <button mat-icon-button (click)="moveStep(i, -1)" [disabled]="first" aria-label="Move step up" matTooltip="Move up">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="moveStep(i, 1)" [disabled]="last" aria-label="Move step down" matTooltip="Move down">
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="removeStep(i)" aria-label="Remove step" matTooltip="Remove from chain">
+          <mat-icon>close</mat-icon>
+        </button>
+      </li>
+    </ol>
+    <ng-template #noSteps>
+      <p class="empty-msg">Add blocks below, in the order they should play.</p>
+    </ng-template>
+
+    <div class="add-row">
+      <mat-form-field appearance="outline" class="block-picker" subscriptSizing="dynamic">
+        <mat-label>Block</mat-label>
+        <mat-select [(ngModel)]="blockToAdd" name="blockToAdd" aria-label="Block to add">
+          <mat-option *ngFor="let b of blocks; trackBy: trackById" [value]="b.id">
+            {{ b.name }} — {{ describeBlock(b.settings) }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-stroked-button color="primary" class="add-step-btn" (click)="addStep()" [disabled]="!blockToAdd">
+        <mat-icon>add</mat-icon>
+        Add
+      </button>
+      <button mat-button color="primary" class="add-all-btn" (click)="addAllBlocks()">Add all blocks</button>
+    </div>
+
+    <div class="editor-actions">
+      <button mat-button (click)="cancelEdit()">Cancel</button>
+      <button mat-raised-button color="primary" class="save-chain-btn" (click)="saveDraft()" [disabled]="!d.blockIds.length">
+        <mat-icon>save</mat-icon>
+        Save chain
+      </button>
+    </div>
+  </div>
+
+  <!-- Saved chains -->
+  <ol class="chain-list" *ngIf="chains.length">
+    <li
+      class="chain-item"
+      *ngFor="let chain of chains; let i = index; let first = first; let last = last; trackBy: trackById"
+      [class.playing]="chain.id === playingChainId"
+    >
+      <button
+        mat-icon-button
+        color="primary"
+        class="play-chain-btn"
+        (click)="playChain(chain)"
+        [disabled]="!stepsOf(chain).length"
+        [attr.aria-label]="'Play ' + chain.name"
+        matTooltip="Play this chain"
+      >
+        <mat-icon>{{ chain.id === playingChainId ? 'graphic_eq' : 'play_circle' }}</mat-icon>
+      </button>
+      <div class="chain-main">
+        <span class="chain-name">{{ chain.name }}</span>
+        <span class="chain-summary">{{ summary(chain) }}</span>
+        <span class="chain-steps">{{ stepNames(chain) || 'Its blocks were deleted' }}</span>
+      </div>
+      <div class="chain-actions">
+        <button mat-icon-button (click)="editChain(chain)" [disabled]="!!draft" aria-label="Edit chain" matTooltip="Edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="moveChain(i, -1)" [disabled]="first" aria-label="Move chain up" matTooltip="Move up">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="moveChain(i, 1)" [disabled]="last" aria-label="Move chain down" matTooltip="Move down">
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteChain(chain)" aria-label="Delete chain" matTooltip="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </li>
+  </ol>
+</section>

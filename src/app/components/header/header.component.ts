@@ -16,6 +16,7 @@ export class HeaderComponent {
 
   navItems = [
     { label: 'Metronome', path: '/metronome' },
+    { label: 'Metronome Plus', path: '/metronome-plus' },
     { label: 'Sheets', path: '/sheets' },
     { label: 'Musics', path: '/musics' },
     { label: 'Lessons', path: '/lessons' },

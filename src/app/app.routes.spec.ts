@@ -1,5 +1,5 @@
 import { routes } from './app.routes';
-import { MetronomeComponent } from './pages/metronome/metronome.component';
+import { MetronomePageComponent } from './pages/metronome/metronome-page.component';
 
 describe('app routes', () => {
   it('redirects the empty path to the metronome', () => {
@@ -11,11 +11,11 @@ describe('app routes', () => {
     expect(routes.find((r) => r.path === '**')?.redirectTo).toBe('metronome');
   });
 
-  it('maps /metronome to MetronomeComponent', () => {
-    expect(routes.find((r) => r.path === 'metronome')?.component).toBe(MetronomeComponent);
+  it('maps /metronome to MetronomePageComponent', () => {
+    expect(routes.find((r) => r.path === 'metronome')?.component).toBe(MetronomePageComponent);
   });
 
-  it.each(['metronome', 'sheets', 'musics', 'lessons', 'books', 'terms-and-conditions'])(
+  it.each(['metronome', 'metronome-plus', 'sheets', 'musics', 'lessons', 'books', 'terms-and-conditions'])(
     'route %s has a component and a MniDrums title',
     (path) => {
       const route = routes.find((r) => r.path === path);

@@ -1,0 +1,78 @@
+<section class="page-wrap metronome-plus-page">
+  <h1 class="page-title">Metronome Plus</h1>
+  <p class="page-subtitle">
+    Build practice routines from your blocks. Play all blocks or a saved chain: each block plays for its saved number of bars, then the next one starts on its own.
+  </p>
+
+  <app-metronome (stopped)="onMetronomeStopped($event)"></app-metronome>
+
+  <section class="chain card" aria-labelledby="chain-title">
+    <div class="chain-header">
+      <h2 id="chain-title">Player</h2>
+      <span class="chain-total" *ngIf="sequence.length">{{ sequenceSummary }}</span>
+    </div>
+
+    <mat-form-field appearance="outline" class="source-field" subscriptSizing="dynamic">
+      <mat-label>Play</mat-label>
+      <mat-select [(ngModel)]="source" [disabled]="chainRunning" aria-label="What to play">
+        <mat-option [value]="ALL_BLOCKS">All blocks (list order)</mat-option>
+        <mat-option *ngFor="let chain of chains" [value]="chain.id">{{ chain.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="chain-controls">
+      <button mat-icon-button (click)="skipPrevious()" [disabled]="!chainRunning" matTooltip="Previous block" aria-label="Previous block">
+        <mat-icon>skip_previous</mat-icon>
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        class="chain-btn"
+        (click)="toggleChain()"
+        [disabled]="!sequence.length && !chainRunning"
+      >
+        <mat-icon>{{ chainRunning ? 'stop' : 'playlist_play' }}</mat-icon>
+        {{ chainRunning ? 'Stop chain' : 'Start chain' }}
+      </button>
+      <button mat-icon-button (click)="skipNext()" [disabled]="!chainRunning" matTooltip="Next block" aria-label="Next block">
+        <mat-icon>skip_next</mat-icon>
+      </button>
+      <mat-slide-toggle color="primary" class="repeat-toggle" [(ngModel)]="repeatChain">Repeat chain</mat-slide-toggle>
+    </div>
+
+    <div class="chain-status" aria-live="polite">
+      <ng-container *ngIf="chainRunning && currentBlock as block; else idle">
+        <p class="now-playing">
+          <span class="label">Now playing</span>
+          <strong>{{ currentPosition + 1 }}/{{ sequence.length }} · {{ block.name }}</strong>
+        </p>
+        <p class="playing-source">
+          <span class="label">Chain</span>
+          {{ sourceName }}
+        </p>
+        <p class="untimed-hint" *ngIf="block.settings.bars <= 0">
+          This block has no bar count — press <mat-icon inline>skip_next</mat-icon> to move on.
+        </p>
+        <p class="up-next">
+          <span class="label">Up next</span>
+          {{ nextBlock ? nextBlock.name : 'End of chain' }}
+        </p>
+      </ng-container>
+      <ng-template #idle>
+        <p class="finished" *ngIf="chainFinished">Chain finished. Nice work! 🥁</p>
+        <p class="hint" *ngIf="!blocks.length">Save at least one block below to build a chain.</p>
+        <p class="hint" *ngIf="sequence.length && hasUntimedBlocks">
+          Blocks without a bar count (∞) play until you press <mat-icon inline>skip_next</mat-icon>. Set “Play for (bars)” before saving a block to make it advance on its own.
+        </p>
+      </ng-template>
+    </div>
+  </section>
+
+  <app-metronome-chains [playingChainId]="playingChainId" (play)="playSavedChain($event)"></app-metronome-chains>
+
+  <app-metronome-blocks
+    [metronome]="metronome"
+    [playingBlockId]="currentBlockId"
+    [loadDisabled]="chainRunning"
+  ></app-metronome-blocks>
+</section>

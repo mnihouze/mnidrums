@@ -1,6 +1,7 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MetronomeSettings } from '../../models/metronome-settings';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,9 +9,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+
+export type MetronomeStopReason = 'user' | 'completed';
 
 interface SubdivisionOption {
   value: number;
@@ -28,7 +30,6 @@ interface SubdivisionOption {
     MatSliderModule,
     MatButtonModule,
     MatIconModule,
-    MatSlideToggleModule,
     MatFormFieldModule,
     MatInputModule,
     MatProgressBarModule,
@@ -38,6 +39,13 @@ interface SubdivisionOption {
   styleUrl: './metronome.component.scss',
 })
 export class MetronomeComponent implements OnDestroy {
+  /**
+   * Emitted whenever playback stops: `'completed'` after the last of the
+   * "play for X bars" has sounded, `'user'` for any other stop (Stop button,
+   * `stop()` call).
+   */
+  @Output() stopped = new EventEmitter<MetronomeStopReason>();
+
   // --- Tempo ---
   bpm = 100;
   readonly minBpm = 30;
@@ -47,8 +55,9 @@ export class MetronomeComponent implements OnDestroy {
   beatsPerBar = 4;
   readonly barOptions = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-  // --- Stress first beat ---
-  stressFirstBeat = true;
+  // --- Accented beats (toggled by clicking the beat dots) ---
+  /** 0-based beats of the bar that get the strong click. Kept when the bar shrinks, so growing it back restores them. */
+  accents: number[] = [0];
 
   // --- Subdivision (notation) ---
   readonly subdivisionOptions: SubdivisionOption[] = [
@@ -59,10 +68,15 @@ export class MetronomeComponent implements OnDestroy {
   ];
   subdivision = 1;
 
-  // --- Play-for-X-minutes timer ---
-  durationMinutes = 0; // 0 = play indefinitely
-  timerProgress = 0;
-  remainingSeconds = 0;
+  // --- Play for X bars (optional) ---
+  /** Bars to play; empty (null) or 0 = play indefinitely. A bar is `beatsPerBar` beats. */
+  barsToPlay: number | null = null;
+  /** Bar limit of the current run (snapshot of `barsToPlay` at start), or null. */
+  barsTarget: number | null = null;
+  /** 1-based bar currently sounding (0 before the first click). */
+  currentBar = 0;
+  /** 0–100 progress through `barsTarget`, beat by beat. */
+  barProgress = 0;
 
   // --- Playback state ---
   isPlaying = false;
@@ -84,9 +98,12 @@ export class MetronomeComponent implements OnDestroy {
 
   private tapTimes: number[] = [];
 
-  private timerIntervalId: number | null = null;
-  private timerEndAt = 0;
-  private timerTotalMs = 0;
+  /** Bars whose first note has been scheduled in this run. */
+  private scheduledBars = 0;
+  /** Pending "last bar has finished" stop, once all bars are scheduled. */
+  private endTimeoutId: number | null = null;
+  /** Increments every start, so beat flashes from a previous run are ignored. */
+  private runId = 0;
 
   // ----- Playback control -----
 
@@ -95,6 +112,7 @@ export class MetronomeComponent implements OnDestroy {
   }
 
   start(): void {
+    if (this.isPlaying) return;
     if (!this.audioCtx) {
       this.audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
@@ -103,62 +121,74 @@ export class MetronomeComponent implements OnDestroy {
     }
 
     this.isPlaying = true;
+    this.runId++;
     this.currentBeat = 0;
     this.currentSub = 0;
     this.schedulingBeat = 0;
     this.schedulingSub = 0;
+    this.barsTarget = normalizeBars(this.barsToPlay);
+    this.scheduledBars = 0;
+    this.currentBar = 0;
+    this.barProgress = 0;
     this.nextNoteTime = this.audioCtx.currentTime + 0.05;
     this.scheduler();
-
-    if (this.durationMinutes > 0) {
-      this.timerTotalMs = this.durationMinutes * 60000;
-      this.timerEndAt = Date.now() + this.timerTotalMs;
-      this.timerProgress = 0;
-      this.remainingSeconds = Math.ceil(this.timerTotalMs / 1000);
-      this.timerIntervalId = window.setInterval(() => this.tickTimer(), 200);
-    }
   }
 
   stop(): void {
+    this.halt('user');
+  }
+
+  private halt(reason: MetronomeStopReason): void {
+    const wasPlaying = this.isPlaying;
     this.isPlaying = false;
     this.pulse = false;
     if (this.schedulerId !== null) {
       clearTimeout(this.schedulerId);
       this.schedulerId = null;
     }
-    if (this.timerIntervalId !== null) {
-      clearInterval(this.timerIntervalId);
-      this.timerIntervalId = null;
+    if (this.endTimeoutId !== null) {
+      clearTimeout(this.endTimeoutId);
+      this.endTimeoutId = null;
     }
-    this.timerProgress = 0;
+    this.barProgress = 0;
+    if (wasPlaying) {
+      this.stopped.emit(reason);
+    }
   }
 
-  private tickTimer(): void {
-    const remaining = this.timerEndAt - Date.now();
-    if (remaining <= 0) {
-      this.stop();
-      return;
-    }
-    this.remainingSeconds = Math.ceil(remaining / 1000);
-    this.timerProgress = 100 - (remaining / this.timerTotalMs) * 100;
-  }
-
-  get remainingTimeLabel(): string {
-    const m = Math.floor(this.remainingSeconds / 60);
-    const s = this.remainingSeconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')} remaining`;
+  /** e.g. "Bar 3 of 8". */
+  get barLabel(): string {
+    return `Bar ${Math.max(1, this.currentBar)} of ${this.barsTarget}`;
   }
 
   // ----- Scheduling (Web Audio API, no libraries) -----
 
   private scheduler = (): void => {
     if (!this.audioCtx) return;
-    while (this.nextNoteTime < this.audioCtx.currentTime + this.scheduleAheadTime) {
+    while (this.endTimeoutId === null && this.nextNoteTime < this.audioCtx.currentTime + this.scheduleAheadTime) {
+      const startsBar = this.schedulingBeat === 0 && this.schedulingSub === 0;
+      if (startsBar) {
+        if (this.barsTarget !== null && this.scheduledBars >= this.barsTarget) {
+          // Every bar is scheduled: stop when the next bar would begin, i.e.
+          // right after the last bar's final beat has fully played.
+          this.scheduleEnd(this.nextNoteTime);
+          break;
+        }
+        this.scheduledBars++;
+      }
       this.scheduleNote(this.schedulingBeat, this.schedulingSub, this.nextNoteTime);
       this.advanceNote();
     }
     this.schedulerId = window.setTimeout(this.scheduler, this.lookahead);
   };
+
+  private scheduleEnd(time: number): void {
+    const delayMs = Math.max(0, (time - this.audioCtx!.currentTime) * 1000);
+    this.endTimeoutId = window.setTimeout(() => {
+      this.endTimeoutId = null;
+      this.halt('completed');
+    }, delayMs);
+  }
 
   private advanceNote(): void {
     const secondsPerBeat = 60 / this.bpm;
@@ -175,7 +205,7 @@ export class MetronomeComponent implements OnDestroy {
   private scheduleNote(beat: number, sub: number, time: number): void {
     if (!this.audioCtx) return;
     const isDownbeat = sub === 0;
-    const isFirstBeat = beat === 0 && isDownbeat;
+    const isAccent = isDownbeat && this.isAccented(beat);
 
     const osc = this.audioCtx.createOscillator();
     const gain = this.audioCtx.createGain();
@@ -183,7 +213,7 @@ export class MetronomeComponent implements OnDestroy {
     let freq = 700;
     let vol = 0.3;
 
-    if (isFirstBeat && this.stressFirstBeat) {
+    if (isAccent) {
       freq = 1600;
       vol = 0.9;
     } else if (isDownbeat) {
@@ -201,12 +231,21 @@ export class MetronomeComponent implements OnDestroy {
     osc.stop(time + 0.05);
 
     const delayMs = Math.max(0, (time - this.audioCtx.currentTime) * 1000);
-    window.setTimeout(() => this.flashBeat(beat, sub), delayMs);
+    const runId = this.runId;
+    window.setTimeout(() => this.flashBeat(beat, sub, runId), delayMs);
   }
 
-  private flashBeat(beat: number, sub: number): void {
+  private flashBeat(beat: number, sub: number, runId: number): void {
+    if (runId !== this.runId || !this.isPlaying) return;
     this.currentBeat = beat;
     this.currentSub = sub;
+    if (sub === 0) {
+      if (beat === 0) this.currentBar++;
+      if (this.barsTarget) {
+        const beatsDone = (this.currentBar - 1) * this.beatsPerBar + beat + 1;
+        this.barProgress = Math.min(100, (beatsDone / (this.barsTarget * this.beatsPerBar)) * 100);
+      }
+    }
     this.pulse = true;
     window.setTimeout(() => (this.pulse = false), 90);
   }
@@ -249,6 +288,51 @@ export class MetronomeComponent implements OnDestroy {
     this.onBpmChange(60000 / avgMs);
   }
 
+  // ----- Settings snapshot (used by Metronome Plus blocks) -----
+
+  getSettings(): MetronomeSettings {
+    return {
+      bpm: this.bpm,
+      beatsPerBar: this.beatsPerBar,
+      subdivision: this.subdivision,
+      accents: this.accents.filter((b) => b < this.beatsPerBar).sort((a, b) => a - b),
+      bars: normalizeBars(this.barsToPlay) ?? 0,
+    };
+  }
+
+  /** Applies saved settings, ignoring values outside the supported options. */
+  applySettings(settings: MetronomeSettings): void {
+    this.onBpmChange(settings.bpm);
+
+    if (this.barOptions.includes(settings.beatsPerBar) && settings.beatsPerBar !== this.beatsPerBar) {
+      this.beatsPerBar = settings.beatsPerBar;
+      this.onBeatsPerBarChange();
+    }
+
+    if (this.subdivisionOptions.some((o) => o.value === settings.subdivision)) {
+      this.subdivision = settings.subdivision;
+    }
+
+    this.accents = normalizeAccents(settings.accents, this.beatsPerBar);
+
+    // The bars field is locked while playing, so only change it when stopped.
+    if (!this.isPlaying) {
+      this.barsToPlay = normalizeBars(settings.bars);
+    }
+  }
+
+  isAccented(beat: number): boolean {
+    return this.accents.includes(beat);
+  }
+
+  /** Turns the strong click on/off for one beat of the bar (clicking its dot). */
+  toggleAccent(beat: number): void {
+    if (beat < 0 || beat >= this.beatsPerBar) return;
+    this.accents = this.isAccented(beat)
+      ? this.accents.filter((b) => b !== beat)
+      : [...this.accents, beat].sort((a, b) => a - b);
+  }
+
   get beatDots(): number[] {
     return Array.from({ length: this.beatsPerBar }, (_, i) => i);
   }
@@ -257,4 +341,15 @@ export class MetronomeComponent implements OnDestroy {
     this.stop();
     this.audioCtx?.close();
   }
+}
+
+/** Unique, sorted, whole beat indexes within the bar. */
+export function normalizeAccents(accents: readonly number[] | null | undefined, beatsPerBar: number): number[] {
+  const valid = (accents ?? []).filter((b) => Number.isInteger(b) && b >= 0 && b < beatsPerBar);
+  return [...new Set(valid)].sort((a, b) => a - b);
+}
+
+/** Whole number of bars to play, or null for "play indefinitely" (empty, 0, invalid). */
+export function normalizeBars(value: number | null | undefined): number | null {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 1 ? Math.floor(value) : null;
 }

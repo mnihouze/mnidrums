@@ -1,0 +1,157 @@
+.chains {
+  max-width: 620px;
+  margin: 1.5rem auto 0;
+  padding: 1.25rem;
+  border: 2px solid var(--brass);
+}
+
+.chains-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.empty-msg {
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0.25rem 0;
+}
+
+// ----- Editor -----
+
+.chain-editor {
+  background: var(--tan-light);
+  border: 2px dashed var(--brass);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  h3 {
+    margin-bottom: 0.75rem;
+  }
+}
+
+.full {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.step-list,
+.chain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.step-list {
+  margin-bottom: 0.75rem;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--cream);
+  border: 1px solid var(--shell-hoop);
+  border-radius: 8px;
+}
+
+.step-index {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--brass-dark);
+  min-width: 1.5ch;
+  text-align: right;
+}
+
+.step-main,
+.chain-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.step-name,
+.chain-name {
+  font-weight: 600;
+  color: var(--wood-dark);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.step-summary,
+.chain-summary,
+.chain-steps {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.chain-steps {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.add-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.block-picker {
+  flex: 1 1 220px;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+// ----- Saved chains -----
+
+.chain-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  background: var(--tan-light);
+  border: 2px solid var(--shell-hoop);
+  border-radius: var(--radius);
+}
+
+.chain-item.playing {
+  border-color: var(--brass-dark);
+  background: linear-gradient(90deg, rgba(227, 185, 106, 0.45), var(--tan-light) 70%);
+  box-shadow: 0 0 12px rgba(227, 185, 106, 0.8);
+}
+
+.chain-actions {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 520px) {
+  .chain-item {
+    flex-wrap: wrap;
+  }
+  .chain-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
