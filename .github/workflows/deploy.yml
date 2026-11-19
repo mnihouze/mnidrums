@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  # Permite rodar o deploy manualmente pela aba Actions ("Run workflow").
+  workflow_dispatch:
 
 jobs:
   web-deploy:
@@ -19,10 +21,17 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Instalar dependências e fazer o Build
-        run: |
-          npm ci
-          npm run build --configuration=production
+      - name: Instalar dependências
+        run: npm ci
+
+      # Não publica se algum teste falhar.
+      - name: Rodar os testes
+        run: npm test
+
+      # O "--" repassa a flag para o "ng build" (sem ele o npm a engole).
+      # public/.htaccess (rotas do app + cache) vai junto para o browser/.
+      - name: Fazer o Build
+        run: npm run build -- --configuration production
 
       - name: Enviar arquivos via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
