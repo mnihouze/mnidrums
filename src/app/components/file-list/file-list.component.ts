@@ -1,14 +1,14 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+
 import { LibraryItem } from '../../models/library-item';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 
 @Component({
-  selector: 'app-file-list',
-  standalone: true,
-  imports: [CommonModule, SafeUrlPipe],
-  templateUrl: './file-list.component.html',
-  styleUrl: './file-list.component.scss'
+    selector: 'app-file-list',
+    imports: [SafeUrlPipe],
+    templateUrl: './file-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './file-list.component.scss'
 })
 export class FileListComponent {
   @Input() items: LibraryItem[] = [];

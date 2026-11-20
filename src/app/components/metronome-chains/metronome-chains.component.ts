@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -24,20 +24,19 @@ export interface ChainDraft {
 
 /** Lists the saved chains and lets the user create, edit, reorder, delete and play them. */
 @Component({
-  selector: 'app-metronome-chains',
-  standalone: true,
-  imports: [
-    CommonModule,
+    selector: 'app-metronome-chains',
+    imports: [
     FormsModule,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatSelectModule,
-    MatTooltipModule,
-  ],
-  templateUrl: './metronome-chains.component.html',
-  styleUrl: './metronome-chains.component.scss',
+    MatTooltipModule
+],
+    templateUrl: './metronome-chains.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './metronome-chains.component.scss'
 })
 export class MetronomeChainsComponent {
   /** Chain currently playing, highlighted in the list. */

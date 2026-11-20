@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, OnDestroy, Output, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { MetronomeSettings } from '../../models/metronome-settings';
 
@@ -21,10 +21,8 @@ interface SubdivisionOption {
 }
 
 @Component({
-  selector: 'app-metronome',
-  standalone: true,
-  imports: [
-    CommonModule,
+    selector: 'app-metronome',
+    imports: [
     FormsModule,
     MatCardModule,
     MatSliderModule,
@@ -34,9 +32,10 @@ interface SubdivisionOption {
     MatInputModule,
     MatProgressBarModule,
     MatTooltipModule
-  ],
-  templateUrl: './metronome.component.html',
-  styleUrl: './metronome.component.scss',
+],
+    templateUrl: './metronome.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './metronome.component.scss'
 })
 export class MetronomeComponent implements OnDestroy {
   /**

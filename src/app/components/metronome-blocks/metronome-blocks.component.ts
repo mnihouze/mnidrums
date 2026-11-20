@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, Input, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule, NgForm } from '@angular/forms';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -40,20 +40,19 @@ export function describeSettings(settings: MetronomeSettings): string {
  * Metronome Plus pages, which see the same list.
  */
 @Component({
-  selector: 'app-metronome-blocks',
-  standalone: true,
-  imports: [
-    CommonModule,
+    selector: 'app-metronome-blocks',
+    imports: [
     FormsModule,
     DragDropModule,
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatTooltipModule,
-  ],
-  templateUrl: './metronome-blocks.component.html',
-  styleUrl: './metronome-blocks.component.scss',
+    MatTooltipModule
+],
+    templateUrl: './metronome-blocks.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './metronome-blocks.component.scss'
 })
 export class MetronomeBlocksComponent {
   /** The metronome whose settings are saved and loaded. */

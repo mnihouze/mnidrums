@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'app-sheets',
-  standalone: true,
-  imports: [],
-  templateUrl: './sheets.component.html',
-  styleUrl: './sheets.component.scss'
+    selector: 'app-sheets',
+    imports: [],
+    templateUrl: './sheets.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './sheets.component.scss'
 })
 export class SheetsComponent {}

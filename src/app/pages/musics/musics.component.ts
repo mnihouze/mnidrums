@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FileListComponent } from '../../components/file-list/file-list.component';
 import { LibraryItem } from '../../models/library-item';
 
 @Component({
-  selector: 'app-musics',
-  standalone: true,
-  imports: [FileListComponent],
-  templateUrl: './musics.component.html',
-  styleUrl: './musics.component.scss',
+    selector: 'app-musics',
+    imports: [FileListComponent],
+    templateUrl: './musics.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './musics.component.scss'
 })
 export class MusicsComponent {
   // Placeholder data — replace pdfPath/linkUrl with your real files and links.

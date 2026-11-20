@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { HeaderComponent } from './header.component';
 import { SITE_NAME } from '../../site-config';
 
-@Component({ standalone: true, template: '' })
+@Component({ template: '' })
 class DummyPageComponent {}
 
 describe('HeaderComponent', () => {

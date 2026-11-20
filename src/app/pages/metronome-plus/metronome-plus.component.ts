@@ -1,5 +1,5 @@
-import { Component, ViewChild, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -26,10 +26,8 @@ export const ALL_BLOCKS = 'all';
  * one starts automatically.
  */
 @Component({
-  selector: 'app-metronome-plus',
-  standalone: true,
-  imports: [
-    CommonModule,
+    selector: 'app-metronome-plus',
+    imports: [
     FormsModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -39,10 +37,11 @@ export const ALL_BLOCKS = 'all';
     MatTooltipModule,
     MetronomeComponent,
     MetronomeBlocksComponent,
-    MetronomeChainsComponent,
-  ],
-  templateUrl: './metronome-plus.component.html',
-  styleUrl: './metronome-plus.component.scss',
+    MetronomeChainsComponent
+],
+    templateUrl: './metronome-plus.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './metronome-plus.component.scss'
 })
 export class MetronomePlusComponent {
   @ViewChild(MetronomeComponent, { static: true }) metronome!: MetronomeComponent;

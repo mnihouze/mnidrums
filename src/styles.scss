@@ -16,7 +16,8 @@ $app-theme: mat.define-theme((
 
 html {
   color-scheme: light dark;
-  @include mat.core();
+  @include mat.elevation-classes();
+  @include mat.app-background();
   @include mat.all-component-themes($app-theme);
 }
 
